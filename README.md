@@ -1,10 +1,13 @@
 # This is a collection of different scripts collected over time.
+- [This is a collection of different scripts collected over time.](#this-is-a-collection-of-different-scripts-collected-over-time)
+  - [Python](#python)
+    - [Download Video in segments and save to file](#download-video-in-segments-and-save-to-file)
+
 
 ## Python
 
 ### Download Video in segments and save to file
 ```python
-
 import requests
 import tqdm  # not needed just makes the console pretty
 
@@ -25,5 +28,4 @@ with open(save_file_name, 'wb+') as file:
         if count is threshold:
             print("To many segments missing. Stopping Download.")
     file.close()
-
 ```
