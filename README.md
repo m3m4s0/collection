@@ -27,5 +27,5 @@ with open(save_file_name, 'wb+') as file:
             count = count +1
         if count is threshold:
             print("To many segments missing. Stopping Download.")
-    file.close()
+    file.close() #
 ```
