@@ -31,6 +31,7 @@ with open(save_file_name, 'wb+') as file:
 ```
 
 ### Show all Outlook Events based on user input
+Usage : "Name of Event" {Number of days to look into the future}(default is 365)
 
 ```python
 # https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.outlook.mailitem?redirectedfrom=MSDN&view=outlook-pia#properties_
@@ -41,7 +42,6 @@ import datetime
 import sys
 outlook = win32com.client.Dispatch("Outlook.Application").GetNamespace("MAPI")
 accounts = win32com.client.Dispatch("Outlook.Application").Session.Accounts
-# -> wählt den Mail Account
 inbox = outlook.Folders(accounts[0].DeliveryStore.DisplayName)
 
 
@@ -71,8 +71,6 @@ if __name__ == "__main__":
     print(f"[*] Checking {meeting}")
     for event in getCalenderEvents(meeting, int(days)):
         print(event)
-
-
 
 ```
 
