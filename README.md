@@ -37,30 +37,37 @@ Usage : "Name of Event" {Number of days to look into the future}(default is 365)
 # https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.outlook.mailitem?redirectedfrom=MSDN&view=outlook-pia#properties_
 
 import win32com.client  # -> muss installiert werden "pip install pywin32"
-import csv
 import datetime
 import sys
+from prettytable import PrettyTable
 outlook = win32com.client.Dispatch("Outlook.Application").GetNamespace("MAPI")
-accounts = win32com.client.Dispatch("Outlook.Application").Session.Accounts
-inbox = outlook.Folders(accounts[0].DeliveryStore.DisplayName)
+# accounts = win32com.client.Dispatch("Outlook.Application").Session.Accounts
+# # -> wählt den Mail Account
+# inbox = outlook.Folders(accounts[0].DeliveryStore.DisplayName)
 
 
 def getCalenderEvents(meeting, day):
-    appointments = outlook.GetDefaultFolder(9).Items
-    appointments.Sort("[Start]")
-    appointments.IncludeRecurrences = "True"
     today = datetime.datetime.today()
     begin = today.date().strftime("%d.%m.%Y")
     endOfLookup = datetime.timedelta(days=day)+today
     end = endOfLookup.date().strftime("%d.%m.%Y")
+
     restrictions = "[Start] >= '" + begin + "' AND [END] <= '" + end + "'"
+
+    appointments = outlook.GetDefaultFolder(9).Items
+    appointments.Sort("[Start]")
+    appointments.IncludeRecurrences = "True"
     appointments = appointments.Restrict(restrictions)
-    events = []
+
+    table = PrettyTable()
+    table.field_names = ["Start", "Subject", "Organizer", "Location"]
+    table.align = "l"
+
     for a in appointments:
-        if meeting in a.Subject:
-            event = f"{a.Subject} - {a.Start}"
-            events.append(event)
-    return events
+        if (meeting.lower() in a.Subject.lower()) or (meeting.lower() in a.Organizer.lower()):
+            start = datetime.datetime.strptime(str(a.Start)[:-6], "%Y-%m-%d %H:%M:%S").strftime("%d.%m.%y %H:%M:%S")
+            table.add_row([start, a.Subject, a.Organizer, a.Location])
+    return table
 
 
 if __name__ == "__main__":
@@ -68,9 +75,10 @@ if __name__ == "__main__":
     days = 365
     if len(sys.argv)-1 >= 2:
         days = sys.argv[2]
-    print(f"[*] Checking {meeting}")
-    for event in getCalenderEvents(meeting, int(days)):
-        print(event)
+    msg = f"[*] Checking for next meetings containing '{meeting}' within the next {days} days"
+    print(msg)
+    print(getCalenderEvents(meeting, int(days)))
+
 
 ```
 
