@@ -46,6 +46,13 @@ outlook = win32com.client.Dispatch("Outlook.Application").GetNamespace("MAPI")
 # inbox = outlook.Folders(accounts[0].DeliveryStore.DisplayName)
 
 
+def getMeetingDetails(a):
+    start = datetime.datetime.strptime(
+        str(a.Start)[:-6], "%Y-%m-%d %H:%M:%S").strftime("%d.%m.%y %H:%M:%S")
+    val = [start, a.Subject[:50], a.Organizer, a.Location[:50]]
+    return val
+
+
 def getCalenderEvents(meeting, day):
     today = datetime.datetime.today()
     begin = today.date().strftime("%d.%m.%Y")
@@ -63,10 +70,13 @@ def getCalenderEvents(meeting, day):
     table.field_names = ["Start", "Subject", "Organizer", "Location"]
     table.align = "l"
 
-    for a in appointments:
-        if (meeting.lower() in a.Subject.lower()) or (meeting.lower() in a.Organizer.lower()):
-            start = datetime.datetime.strptime(str(a.Start)[:-6], "%Y-%m-%d %H:%M:%S").strftime("%d.%m.%y %H:%M:%S")
-            table.add_row([start, a.Subject, a.Organizer, a.Location])
+    if meeting is "*":
+        for appointment in appointments:
+            table.add_row(getMeetingDetails(appointment))
+    else:
+        for appointment in appointments:
+            if (meeting.lower() in appointment.Subject.lower()) or (meeting.lower() in appointment.Organizer.lower()):
+                table.add_row(getMeetingDetails(appointment))
     return table
 
 
@@ -78,6 +88,7 @@ if __name__ == "__main__":
     msg = f"[*] Checking for next meetings containing '{meeting}' within the next {days} days"
     print(msg)
     print(getCalenderEvents(meeting, int(days)))
+
 
 
 ```
