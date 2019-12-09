@@ -93,4 +93,26 @@ if __name__ == "__main__":
 
 ```
 
+### Bulk Download items like pdfs and save them to file
+```python
+import requests
+import tqdm as tqdm
+list = []
+
+
+def download_and_save(item, save_file_name):
+    with open(save_file_name, 'wb+') as file:
+        r = requests.get(item)
+        if r.status_code is 200:
+            file.write(r.content)
+        else:
+            print(f'{item} -> Error downloading')
+    file.close()
+
+
+for item in tqdm.tqdm(list):
+    save_file_name = "".join(item.split("_", 1)[1])
+    download_and_save(item, save_file_name)
+```
+
 ## Node Js
