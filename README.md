@@ -114,5 +114,3 @@ for item in tqdm.tqdm(list):
     save_file_name = "".join(item.split("_", 1)[1])
     download_and_save(item, save_file_name)
 ```
-
-## Node Js
