@@ -6,22 +6,22 @@
 
 ## Python
 
-### Download Video in segments and save to file
+### Download Video in segments and save to file from ARD Mediathek
 ```python
 import requests
 import tqdm  # not needed just makes the console pretty
 
-
 threshold = 5
+segment_start = 0
+segment_end=100
 count = 0
-save_file_name = 'somefilename.extension'
+save_file_name = 'somefilename.mp4'
 
 with open(save_file_name, 'wb+') as file:
-    for segment_ID in tqdm.tqdm(range(1,40,1)):
-        url = f'SOMEURLYOUWANTTODOWNLAOD'
+    for segment_ID in tqdm.tqdm(range(segment_start,segment_end,1)):
+        url = f'SOMEURLYOUWANTTODOWNLAOD'  #....,.s,.sm,.m,.ml,.l,.xl,.xxl,.mp4.csmil/segment{segment_ID}_5_av.ts?null=0'
         r = requests.get(url)
         if r.status_code is 200:
-            print(f'{segment_ID} -> Found')
             file.write(r.content)
         else:
             count = count +1
