@@ -1,5 +1,4 @@
 # This is a collection of different scripts collected over time.
-- [This is a collection of different scripts collected over time.](#this-is-a-collection-of-different-scripts-collected-over-time)
   - [Python](#python)
     - [Download Video in segments and save to file](#download-video-in-segments-and-save-to-file)
     - [Show all Outlook Events based on user input](#show-all-outlook-events-based-on-user-input)
